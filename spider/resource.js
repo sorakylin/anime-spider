@@ -1,7 +1,10 @@
-const BILIBILI_RANKING_URL = 'https://api.bilibili.com/pgc/season/index/result'
+//bilibili的排行榜链接，是个api接口请求
+const BILIBILI_ANIME_RANKING_URL = 'https://api.bilibili.com/pgc/season/index/result'
 
+//bangumi的排行链接， 由于bangumi是服务端渲染，只能拿到 html 页面了
+const BANGUMI_ANIME_RANKING_URL = 'https://bangumi.tv/anime/browser'
 
-exports.getBilibiliRankingApiUrl = function(page, pagesize) {
+exports.getBilibiliRankingApiUrl = function (page, pagesize) {
     let param = {
         season_version: -1,
         area: -1,
@@ -15,14 +18,24 @@ exports.getBilibiliRankingApiUrl = function(page, pagesize) {
         st: 1,
         sort: 0,
         season_type: 1,
-        type: 1
+        type: 1,
+        page: page,
+        pagesize: pagesize
     };
 
-    param.page = page;
-    param.pagesize = pagesize;
-
-    return getUrl(BILIBILI_RANKING_URL, param);
+    return getUrl(BILIBILI_ANIME_RANKING_URL, param);
 }
+
+exports.getBangumiRankingApiUrl = function (page) {
+    let param = {
+        sort: 'rank',
+        page: page
+    };
+
+    return getUrl(BANGUMI_ANIME_RANKING_URL, param);
+}
+
+
 
 
 

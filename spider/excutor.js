@@ -1,16 +1,17 @@
-const superagent = require('superagent');
+const request = require('superagent');
 const cheerio = require('cheerio');
 const resource = require('./resource');
 const anime = require('../model/concrete/anime_category');
 
-exports.start = function start(pageNum = 1, pageSize = 50) {
+function bilibili(pageNum = 1, pageSize = 50) {
+    console.log('-----  bilibili admin spider start!')
 
     //排行
     let rank = (pageNum - 1) * pageSize;
 
     let url = resource.getBilibiliRankingApiUrl(pageNum, pageSize);
 
-    superagent.get(url).end((err, result) => {
+    request.get(url).end((err, result) => {
 
         if (err) {
             console.log(err);
@@ -25,19 +26,114 @@ exports.start = function start(pageNum = 1, pageSize = 50) {
 
         for (let animeInfo of adminList) {
             let biAnime = new anime.BilibiliAnime(animeInfo.title, animeInfo.cover, animeInfo.order)
-                .badge(animeInfo.badge).mediaId(animeInfo.media_id).rank(++rank);
+                .badge(animeInfo.badge)
+                .mediaId(animeInfo.media_id)
+                .rank(++rank);
 
             console.log(biAnime.toJson());
         }
 
         if (resultJson.data.has_next == 1) {
-            start(++pageNum, pageSize);
+            bilibili(++pageNum, pageSize);
         }
 
     })
 }
 
+//bangumi 排行榜单页数据固定为24个
+//rank 可以从dom中获取
+async function bangumi(pageNum = 1, pageCount) {
 
-function bilibili() {
+    console.log('-----  bangumi admin spider start!')
+
+    if (pageCount && pageNum > pageCount) return;
+    if (!pageCount) {
+        console.log('get rank count num');
+        let rankCount = await findBangumiRankNum();
+        pageCount = rankCount % 24 == 0 ? rankCount / 24 : (rankCount - (rankCount % 24)) / 24;
+    }
+
+    let url = resource.getBangumiRankingApiUrl(pageNum);
+
+    console.log('bangumi page: ' + pageNum);
+    request.get(url).end((err, result) => {
+
+        if (err) {
+            console.log(err);
+            return;
+        }
+
+        // BangumiAnime[] 
+        let animeInfos = parseBangumiModel(result.text);
+        console.log(animeInfos);
+
+        bangumi(++pageNum, pageCount);
+    })
+}
+
+/**
+ * 取 bangumi 番剧的 rank 数量
+ */
+async function findBangumiRankNum() {
+
+    //从雷锋的故事获取 bangumi 最低 rank
+    let requestUrl = 'https://bangumi.tv/subject/6476';
+
+    let rank;
+
+    await request.get(requestUrl)
+        .then(res => {
+            let $dom = cheerio.load(res.text);
+            let rankText = $dom('#panelInterestWrapper small.alarm').text();
+            rank = parseInt(rankText.replace('#', ''));
+        }).catch(err => {
+            rank = 5000; //默认值
+        });
+
+    return rank;
 
 }
+
+function parseBangumiModel(domText) {
+    let $dom = cheerio.load(domText);
+
+    let result = new Array();
+
+    let $admins = $dom('#browserItemList>li');
+
+    if ($admins.length == 0) return result;
+
+    $admins.each((index, ele) => {
+        let $ele = $dom(ele);
+
+        // bangumi id
+        let id = $ele.attr('id');
+        //分数
+        let score = $ele.find('small.fade').text();
+        //图片地址
+        let imgUrl = $ele.find('img').attr('src');
+        imgUrl = imgUrl ? imgUrl.replace('/s/', '/l/') : imgUrl;
+        //动画名
+        let animeName = $ele.find('.inner>h3>a').text();
+        //排名
+        let rank = $ele.find('.rank').remove('small').text().replace('Rank ', '');
+        //描述
+        let desc = $ele.find('p.info').text().replace('\n', '').trim();
+        //评分人数
+        let raterNum = $ele.find('span.tip_j').text().replace('人评分', '').replace('(', '');
+
+        //一个动画实体
+        let singleAnime = new anime.BangumiAnime(animeName, imgUrl, score)
+            .id(id)
+            .rank(rank)
+            .desc(desc)
+            .raterNum(raterNum);
+
+        result.push(singleAnime);
+    })
+
+    return result;
+}
+
+module.exports.bilibili = bilibili;
+module.exports.bangumi = bangumi;

@@ -6,6 +6,10 @@ module.exports = class AnimeInfo {
         this.score = score;
     }
 
+    /**
+     * 排行信息
+     * @param {*} rank 排行数
+     */
     rank(rank) {
         this.rank = rank;
         return this;

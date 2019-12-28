@@ -25,6 +25,23 @@ class BangumiAnime extends AnimeInfo {
         super(name, imgUrl, score);
     }
 
+    id(id) {
+        this.id = id;
+        return this;
+    }
+
+    //评分人数
+    raterNum(num) {
+        this.raterNum = num;
+        return this;
+    }
+
+    //描述
+    desc(desc) {
+        this.desc = desc;
+        return this;
+    }
+
 }
 
 
