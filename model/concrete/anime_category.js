@@ -13,7 +13,7 @@ class BilibiliAnime extends AnimeInfo {
     }
 
     mediaId(mediaId) {
-        this.mediaId = mediaId;
+        this.mediaId = parseInt(mediaId);
         return this;
     }
 
@@ -22,7 +22,7 @@ class BilibiliAnime extends AnimeInfo {
 class BangumiAnime extends AnimeInfo {
 
     constructor(name, imgUrl, score) {
-        super(name, imgUrl, score);
+        super(name, imgUrl, score ? parseFloat(score).toFixed(1) : -1);
     }
 
     id(id) {
@@ -32,7 +32,7 @@ class BangumiAnime extends AnimeInfo {
 
     //评分人数
     raterNum(num) {
-        this.raterNum = num;
+        this.raterNum = parseInt(num);
         return this;
     }
 

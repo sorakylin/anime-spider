@@ -3,7 +3,7 @@ module.exports = class AnimeInfo {
     constructor(name, imgUrl, score) {
         this.name = name;
         this.imgUrl = imgUrl;
-        this.score = score;
+        this.score = parseFloat(score).toFixed(1);
     }
 
     /**
@@ -11,7 +11,7 @@ module.exports = class AnimeInfo {
      * @param {*} rank 排行数
      */
     rank(rank) {
-        this.rank = rank;
+        this.rank = parseInt(rank);
         return this;
     }
 

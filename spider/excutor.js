@@ -2,16 +2,20 @@ const request = require('superagent');
 const cheerio = require('cheerio');
 const resource = require('./resource');
 const anime = require('../model/concrete/anime_category');
+const EventEmitter = require('events').EventEmitter;
+
+const emitter = new EventEmitter();
 
 function bilibili(pageNum = 1, pageSize = 50) {
-    console.log('-----  bilibili admin spider start!')
-
+    
     //排行
     let rank = (pageNum - 1) * pageSize;
 
     let url = resource.getBilibiliRankingApiUrl(pageNum, pageSize);
 
-    request.get(url).end((err, result) => {
+    request.get(url).retry(5).timeout(5000).end((err, result) => {
+
+        let animeInfos = new Array();
 
         if (err) {
             console.log(err);
@@ -30,8 +34,10 @@ function bilibili(pageNum = 1, pageSize = 50) {
                 .mediaId(animeInfo.media_id)
                 .rank(++rank);
 
-            console.log(biAnime.toJson());
+            animeInfos.push(biAnime);
         }
+
+        emitter.emit('spider.animerank.bilibili', animeInfos);
 
         if (resultJson.data.has_next == 1) {
             bilibili(++pageNum, pageSize);
@@ -56,19 +62,22 @@ async function bangumi(pageNum = 1, pageCount) {
     let url = resource.getBangumiRankingApiUrl(pageNum);
 
     console.log('bangumi page: ' + pageNum);
-    request.get(url).end((err, result) => {
+    request.get(url)
+        .retry(5)
+        .timeout(5000)
+        .end((err, result) => {
 
-        if (err) {
-            console.log(err);
-            return;
-        }
+            if (err) {
+                console.log(err);
+                return;
+            }
 
-        // BangumiAnime[] 
-        let animeInfos = parseBangumiModel(result.text);
-        console.log(animeInfos);
+            // BangumiAnime[] 
+            let animeInfos = parseBangumiModel(result.text);
+            emitter.emit('spider.animerank.bangumi', animeInfos);
 
-        bangumi(++pageNum, pageCount);
-    })
+            bangumi(++pageNum, pageCount);
+        })
 }
 
 /**
@@ -82,6 +91,7 @@ async function findBangumiRankNum() {
     let rank;
 
     await request.get(requestUrl)
+        .retry(5).timeout(5000)
         .then(res => {
             let $dom = cheerio.load(res.text);
             let rankText = $dom('#panelInterestWrapper small.alarm').text();
@@ -137,3 +147,6 @@ function parseBangumiModel(domText) {
 
 module.exports.bilibili = bilibili;
 module.exports.bangumi = bangumi;
+module.exports.registrListener = function (key, listener) {
+    emitter.on(key, listener);
+};
