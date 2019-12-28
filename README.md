@@ -21,7 +21,7 @@ node main.js
 ### 说明
 * 采用事件机制监听爬虫数据, 方便做聚合等操作 
 
-```nodejs
+```JavaScript
 const excutor = require('./spider/excutor');
 
 
