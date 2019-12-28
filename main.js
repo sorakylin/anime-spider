@@ -1,4 +1,4 @@
-const excutor = require('./spider/excutor');
+const excutor = require('./src/spider/excutor');
 
 
 excutor.registrListener('spider.animerank.bilibili', adminInfos => {
@@ -16,7 +16,7 @@ excutor.registrListener('spider.animerank.bilibili', adminInfos => {
     */
 
     //do..
-    // console.log(adminInfos);
+    console.log(adminInfos);
 });
 
 excutor.registrListener('spider.animerank.bangumi', adminInfos => {
@@ -40,4 +40,4 @@ excutor.registrListener('spider.animerank.bangumi', adminInfos => {
 
 // execute spider
 excutor.bilibili();
-excutor.bangumi();
+// excutor.bangumi();

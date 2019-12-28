@@ -1,4 +1,4 @@
-# Spider
+# Anime spider
   
 nodejs爬虫, 动画相关信息 
 
@@ -22,7 +22,7 @@ node main.js
 * 采用事件机制监听爬虫数据, 方便做聚合等操作 
 
 ```JavaScript
-const excutor = require('./spider/excutor');
+const excutor = require('./src/spider/excutor');
 
 
 excutor.registrListener('spider.animerank.bilibili', adminInfos => {
@@ -81,5 +81,5 @@ excutor.bangumi();
 <br>
 
 ### 依赖 
-* `superagent`: HTTP请求
-* `cheerio`:    Dom解析
+* superagent: HTTP请求
+* cheerio:    Dom解析
