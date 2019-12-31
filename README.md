@@ -20,6 +20,8 @@ node main.js
 
 ### 说明
 * 采用事件机制监听爬虫数据, 方便做聚合等操作 
+* B站的没有评分的动画 score 字段会展示为 -1
+* myanimelist 拥有超过10000部动画数据, 爬到后面可能出现分数与排名不匹配的现象，即有可能出现分数高一点的排名反而在下面的情况, 这是由于 myadminlist 的rank规则导致的
 
 ```JavaScript
 const excutor = require('./src/spider/excutor');
@@ -63,9 +65,25 @@ excutor.registrListener('spider.animerank.bangumi', adminInfos => {
 });
 
 
+excutor.registrListener('spider.animerank.myanimelist', adminInfos => {
+    /*
+    MALAnime {
+        name: 'One Punch Man',
+        imgUrl: 'https://cdn.myanimelist.net/images/anime/12/76049.jpg',
+        score: 8.68,
+        rank: 50,
+        desc: 'TV (12 eps)   Oct 2015 - Dec 2015   1,464,576 members' 
+    }
+
+    */
+    // console.log(adminInfos);
+});
+
 // execute spider
-excutor.bilibili();
-excutor.bangumi();
+// excutor.bilibili();
+// excutor.bangumi();
+excutor.myanimelist();
+
 ```
 
 <br>
@@ -76,6 +94,8 @@ excutor.bangumi();
     * 事件 `spider.animerank.bilibili`
 * bangumi 的动画排行榜-评分正序
     * 事件 `spider.animerank.bangumi`
+* myadminlist 的动画排行榜-评分正序
+    * 事件 `spider.animerank.myadminlist`
 
 <br>
 <br>

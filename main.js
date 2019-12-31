@@ -50,7 +50,7 @@ excutor.registrListener('spider.animerank.myanimelist', adminInfos => {
     }
 
     */
-    console.log(adminInfos);
+    // console.log(adminInfos);
 });
 
 // execute spider
