@@ -23,6 +23,19 @@ node main.js
 * B站的没有评分的动画 score 字段会展示为 -1
 * myanimelist 拥有超过10000部动画数据, 爬到后面可能出现分数与排名不匹配的现象，即有可能出现分数高一点的排名反而在下面的情况, 这是由于 myadminlist 的rank规则导致的
 
+
+<br>
+<br>
+
+
+### 使用方式
+
+*注: 操作均在 main.js 中进行*
+> 1、 注册你需要的爬虫事件监听器  
+> 2、 在监听器中处理爬虫收集的数据 (如打印,保存到文件/DB,数据分析..等)
+<br>
+
+*main.js*
 ```JavaScript
 const excutor = require('./src/spider/excutor');
 
@@ -82,7 +95,7 @@ excutor.registrListener('spider.animerank.myanimelist', adminInfos => {
 // execute spider
 // excutor.bilibili();
 // excutor.bangumi();
-excutor.myanimelist();
+// excutor.myanimelist();
 
 ```
 
@@ -95,7 +108,7 @@ excutor.myanimelist();
 * bangumi 的动画排行榜-评分正序
     * 事件 `spider.animerank.bangumi`
 * myadminlist 的动画排行榜-评分正序
-    * 事件 `spider.animerank.myadminlist`
+    * 事件 `spider.animerank.myanimelist`
 
 <br>
 <br>
