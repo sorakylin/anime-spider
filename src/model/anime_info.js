@@ -3,7 +3,7 @@ module.exports = class AnimeInfo {
     constructor(name, imgUrl, score) {
         this.name = name;
         this.imgUrl = imgUrl;
-        this.score = parseFloat(score).toFixed(1);
+        this.score = parseFloat(score);
     }
 
     /**

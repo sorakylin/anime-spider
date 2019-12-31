@@ -1,9 +1,21 @@
 const AnimeInfo = require('../anime_info');
 
+class MALAnime extends AnimeInfo {
+    constructor(name, imgUrl, score) {
+        super(name, imgUrl, score ? parseFloat(score).toFixed(2) : -1);
+    }
+
+    //描述
+    desc(desc) {
+        this.desc = desc;
+        return this;
+    }
+}
+
 class BilibiliAnime extends AnimeInfo {
 
     constructor(name, imgUrl, score) {
-        super(name, imgUrl, score ? parseFloat(score.replace('分')).toFixed(1) : -1);
+        super(name, imgUrl, score ? parseFloat(score.replace('分')).toFixed(2) : -1);
     }
 
     //限时免费、会员专享等类别
@@ -47,3 +59,4 @@ class BangumiAnime extends AnimeInfo {
 
 module.exports.BilibiliAnime = BilibiliAnime;
 module.exports.BangumiAnime = BangumiAnime;
+module.exports.MALAnime = MALAnime;

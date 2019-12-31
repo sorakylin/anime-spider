@@ -4,6 +4,18 @@ const BILIBILI_ANIME_RANKING_URL = 'https://api.bilibili.com/pgc/season/index/re
 //bangumi的排行链接， 由于bangumi是服务端渲染，只能拿到 html 页面了
 const BANGUMI_ANIME_RANKING_URL = 'https://bangumi.tv/anime/browser'
 
+const MAL_PAGE_URL = 'https://myanimelist.net/topanime.php'
+
+
+exports.getMyAnimeListPageUrl = function (pageNum) {
+    let param = {
+        limit: (pageNum - 1) * 50
+    };
+
+    return getUrl(MAL_PAGE_URL, param)
+
+}
+
 exports.getBilibiliRankingApiUrl = function (page, pagesize) {
     let param = {
         season_version: -1,

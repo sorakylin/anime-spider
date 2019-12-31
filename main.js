@@ -38,6 +38,22 @@ excutor.registrListener('spider.animerank.bangumi', adminInfos => {
     // console.log(adminInfos);
 });
 
+
+excutor.registrListener('spider.animerank.myanimelist', adminInfos => {
+    /*
+    MALAnime {
+        name: 'One Punch Man',
+        imgUrl: 'https://cdn.myanimelist.net/images/anime/12/76049.jpg',
+        score: 8.68,
+        rank: 50,
+        desc: 'TV (12 eps)   Oct 2015 - Dec 2015   1,464,576 members' 
+    }
+
+    */
+    console.log(adminInfos);
+});
+
 // execute spider
-excutor.bilibili();
+// excutor.bilibili();
 // excutor.bangumi();
+excutor.myanimelist();
