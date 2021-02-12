@@ -9,7 +9,7 @@ nodejs爬虫, 动画相关信息
 ### 快速开始
 
 ```
-git clone https://github.com/skypyb/anime-spider.git
+git clone https://github.com/yue-moon/anime-spider.git
 npm install
 node main.js
 ```
